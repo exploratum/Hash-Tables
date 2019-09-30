@@ -7,6 +7,7 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+
 class HashTable:
     '''
     A hash table that with `capacity` buckets
@@ -23,6 +24,14 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+
+        def hash(key):
+
+            hash_value = 0
+            for char in key:
+                hash_value += ord(char)
+            return hash_value
+
         return hash(key)
 
 
@@ -51,7 +60,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        if (self.storage[index] == None):
+            self.storage[index] = LinkedPair(key, value)
+
+        else:
+            pair = self.storage[index]
+            while pair.next != None and pair.key != key:
+                pair = pair.next
+            
+            # overwrites value of existing key
+            if pair.key == key:
+                pair.value = value
+            # create new pair
+            else:
+                pair.next = LinkedPair(key, value)
+
+
+        
 
 
 
@@ -63,7 +89,30 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        pair = self.storage[index]
+        previousPair = None
+
+        # keep searching while there are pairs 
+        while pair != None and pair.key != key:
+            previousPair = pair
+            pair = pair.next
+
+        # Found the pair
+        if pair != None:
+            #key found in first pair and this is the only existing pair
+            if pair.next == None and previousPair == None:
+                self.storage[index] = None
+
+            # found in the last pair and it is not the onbly existing pair
+            elif pair.next == None and previousPair != None:
+                previousPair.next = None
+
+            # pair found somewhere in the middle of the linked list 
+            else:
+                previousPair.next = pair.next
+
+
 
 
     def retrieve(self, key):
@@ -74,7 +123,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        pair = self.storage[index]
+        while pair != None:
+            if pair.key == key:
+                return pair.value
+            pair = pair.next
+
+        return None
+        
 
 
     def resize(self):
@@ -84,7 +141,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        new_storage = [None] * self.capacity
+        old_storage = self.storage
+        self.storage = new_storage
+
+        for i in range(len(old_storage)):
+            if old_storage[i] != None:
+                pair = old_storage[i]
+                while pair != None:
+                    self.insert(pair.key, pair.value)
+                    pair = pair.next
+
 
 
 
