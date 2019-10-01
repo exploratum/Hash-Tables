@@ -1,3 +1,5 @@
+
+
 # '''
 # Linked List hash table key/value pair
 # '''
@@ -24,13 +26,6 @@ class HashTable:
 
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
-
-        def hash(key):
-
-            hash_value = 0
-            for char in key:
-                hash_value += ord(char)
-            return hash_value
 
         return hash(key)
 
@@ -104,7 +99,7 @@ class HashTable:
             if pair.next == None and previousPair == None:
                 self.storage[index] = None
 
-            # found in the last pair and it is not the onbly existing pair
+            # key found in the last pair and it is not the onbly existing pair
             elif pair.next == None and previousPair != None:
                 previousPair.next = None
 
